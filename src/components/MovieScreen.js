@@ -2,6 +2,7 @@
 
 import React from 'react';
 
+import downloadMagnetTorrent from '../torrent/TorrentManager';
 import type { SukeibeiLink } from '../actions/types';
 
 type Props = {
@@ -17,18 +18,28 @@ type State = {
 };
 
 class MovieScreen extends React.Component<Props, State> {
+  video: any;
+
   constructor(props: Props) {
     super(props);
 
     this.state = {
       movieUri: null,
     };
+
+    // https://github.com/facebook/flow/pull/5920
+    // $FlowFixMe
+    this.video = React.createRef();
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     if (this.props.location && this.props.location.state) {
       const { sukeibeiLink } = this.props.location.state;
-      console.warn(sukeibeiLink);
+
+      console.warn('VIDEO: ');
+      console.warn(this.video.current);
+
+      await downloadMagnetTorrent(sukeibeiLink.magnetLink, 'video');
     }
     // const { magnetLink } = this.props.navigation.state.params.sukeibeiLink;
   }
@@ -38,10 +49,10 @@ class MovieScreen extends React.Component<Props, State> {
   }
 
   render() {
-    if (this.state.movieUri) {
+    if (this.state.movieUri || true) {
       return (
-        <div style={styles.container}>
-          <span>MOVIE PLAYER HERE</span>
+        <div>
+          <video height={500} controls />
         </div>
       );
     }
@@ -49,18 +60,5 @@ class MovieScreen extends React.Component<Props, State> {
     return <span>Loading...</span>;
   }
 }
-
-const styles = {
-  container: {
-    flex: 1,
-  },
-  movie: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    bottom: 0,
-    right: 0,
-  },
-};
 
 export default MovieScreen;

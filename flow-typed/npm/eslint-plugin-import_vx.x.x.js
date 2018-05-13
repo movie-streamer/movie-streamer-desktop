@@ -1,4 +1,4 @@
-// flow-typed signature: 49929c2e6208e8fa48ffddbb6eeb9854
+// flow-typed signature: 957697f348c4354c2600fe4646bd93a5
 // flow-typed version: <<STUB>>/eslint-plugin-import_v^2.11.0/flow_v0.72.0
 
 /**
@@ -58,10 +58,6 @@ declare module 'eslint-plugin-import/lib/core/staticRequire' {
   declare module.exports: any;
 }
 
-declare module 'eslint-plugin-import/lib/docsUrl' {
-  declare module.exports: any;
-}
-
 declare module 'eslint-plugin-import/lib/ExportMap' {
   declare module.exports: any;
 }
@@ -91,10 +87,6 @@ declare module 'eslint-plugin-import/lib/rules/extensions' {
 }
 
 declare module 'eslint-plugin-import/lib/rules/first' {
-  declare module.exports: any;
-}
-
-declare module 'eslint-plugin-import/lib/rules/group-exports' {
   declare module.exports: any;
 }
 
@@ -131,14 +123,6 @@ declare module 'eslint-plugin-import/lib/rules/no-anonymous-default-export' {
 }
 
 declare module 'eslint-plugin-import/lib/rules/no-commonjs' {
-  declare module.exports: any;
-}
-
-declare module 'eslint-plugin-import/lib/rules/no-cycle' {
-  declare module.exports: any;
-}
-
-declare module 'eslint-plugin-import/lib/rules/no-default-export' {
   declare module.exports: any;
 }
 
@@ -190,19 +174,11 @@ declare module 'eslint-plugin-import/lib/rules/no-restricted-paths' {
   declare module.exports: any;
 }
 
-declare module 'eslint-plugin-import/lib/rules/no-self-import' {
-  declare module.exports: any;
-}
-
 declare module 'eslint-plugin-import/lib/rules/no-unassigned-import' {
   declare module.exports: any;
 }
 
 declare module 'eslint-plugin-import/lib/rules/no-unresolved' {
-  declare module.exports: any;
-}
-
-declare module 'eslint-plugin-import/lib/rules/no-useless-path-segments' {
   declare module.exports: any;
 }
 
@@ -254,9 +230,6 @@ declare module 'eslint-plugin-import/lib/core/importType.js' {
 declare module 'eslint-plugin-import/lib/core/staticRequire.js' {
   declare module.exports: $Exports<'eslint-plugin-import/lib/core/staticRequire'>;
 }
-declare module 'eslint-plugin-import/lib/docsUrl.js' {
-  declare module.exports: $Exports<'eslint-plugin-import/lib/docsUrl'>;
-}
 declare module 'eslint-plugin-import/lib/ExportMap.js' {
   declare module.exports: $Exports<'eslint-plugin-import/lib/ExportMap'>;
 }
@@ -280,9 +253,6 @@ declare module 'eslint-plugin-import/lib/rules/extensions.js' {
 }
 declare module 'eslint-plugin-import/lib/rules/first.js' {
   declare module.exports: $Exports<'eslint-plugin-import/lib/rules/first'>;
-}
-declare module 'eslint-plugin-import/lib/rules/group-exports.js' {
-  declare module.exports: $Exports<'eslint-plugin-import/lib/rules/group-exports'>;
 }
 declare module 'eslint-plugin-import/lib/rules/imports-first.js' {
   declare module.exports: $Exports<'eslint-plugin-import/lib/rules/imports-first'>;
@@ -310,12 +280,6 @@ declare module 'eslint-plugin-import/lib/rules/no-anonymous-default-export.js' {
 }
 declare module 'eslint-plugin-import/lib/rules/no-commonjs.js' {
   declare module.exports: $Exports<'eslint-plugin-import/lib/rules/no-commonjs'>;
-}
-declare module 'eslint-plugin-import/lib/rules/no-cycle.js' {
-  declare module.exports: $Exports<'eslint-plugin-import/lib/rules/no-cycle'>;
-}
-declare module 'eslint-plugin-import/lib/rules/no-default-export.js' {
-  declare module.exports: $Exports<'eslint-plugin-import/lib/rules/no-default-export'>;
 }
 declare module 'eslint-plugin-import/lib/rules/no-deprecated.js' {
   declare module.exports: $Exports<'eslint-plugin-import/lib/rules/no-deprecated'>;
@@ -353,17 +317,11 @@ declare module 'eslint-plugin-import/lib/rules/no-nodejs-modules.js' {
 declare module 'eslint-plugin-import/lib/rules/no-restricted-paths.js' {
   declare module.exports: $Exports<'eslint-plugin-import/lib/rules/no-restricted-paths'>;
 }
-declare module 'eslint-plugin-import/lib/rules/no-self-import.js' {
-  declare module.exports: $Exports<'eslint-plugin-import/lib/rules/no-self-import'>;
-}
 declare module 'eslint-plugin-import/lib/rules/no-unassigned-import.js' {
   declare module.exports: $Exports<'eslint-plugin-import/lib/rules/no-unassigned-import'>;
 }
 declare module 'eslint-plugin-import/lib/rules/no-unresolved.js' {
   declare module.exports: $Exports<'eslint-plugin-import/lib/rules/no-unresolved'>;
-}
-declare module 'eslint-plugin-import/lib/rules/no-useless-path-segments.js' {
-  declare module.exports: $Exports<'eslint-plugin-import/lib/rules/no-useless-path-segments'>;
 }
 declare module 'eslint-plugin-import/lib/rules/no-webpack-loader-syntax.js' {
   declare module.exports: $Exports<'eslint-plugin-import/lib/rules/no-webpack-loader-syntax'>;

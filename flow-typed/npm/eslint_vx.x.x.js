@@ -1,4 +1,4 @@
-// flow-typed signature: 6dfbdb84922c5551e53ff33efaeefafe
+// flow-typed signature: 7862fe112db5c23ae436b81123c209c6
 // flow-typed version: <<STUB>>/eslint_v^4.19.1/flow_v0.72.0
 
 /**
@@ -31,6 +31,10 @@ declare module 'eslint/conf/config-schema' {
 }
 
 declare module 'eslint/conf/default-cli-options' {
+  declare module.exports: any;
+}
+
+declare module 'eslint/conf/default-config-options' {
   declare module.exports: any;
 }
 
@@ -379,10 +383,6 @@ declare module 'eslint/lib/rules/id-length' {
 }
 
 declare module 'eslint/lib/rules/id-match' {
-  declare module.exports: any;
-}
-
-declare module 'eslint/lib/rules/implicit-arrow-linebreak' {
   declare module.exports: any;
 }
 
@@ -1322,19 +1322,11 @@ declare module 'eslint/lib/util/hash' {
   declare module.exports: any;
 }
 
-declare module 'eslint/lib/util/interpolate' {
-  declare module.exports: any;
-}
-
 declare module 'eslint/lib/util/keywords' {
   declare module.exports: any;
 }
 
 declare module 'eslint/lib/util/module-resolver' {
-  declare module.exports: any;
-}
-
-declare module 'eslint/lib/util/naming' {
   declare module.exports: any;
 }
 
@@ -1391,6 +1383,9 @@ declare module 'eslint/conf/config-schema.js' {
 }
 declare module 'eslint/conf/default-cli-options.js' {
   declare module.exports: $Exports<'eslint/conf/default-cli-options'>;
+}
+declare module 'eslint/conf/default-config-options.js' {
+  declare module.exports: $Exports<'eslint/conf/default-config-options'>;
 }
 declare module 'eslint/conf/environments.js' {
   declare module.exports: $Exports<'eslint/conf/environments'>;
@@ -1652,9 +1647,6 @@ declare module 'eslint/lib/rules/id-length.js' {
 }
 declare module 'eslint/lib/rules/id-match.js' {
   declare module.exports: $Exports<'eslint/lib/rules/id-match'>;
-}
-declare module 'eslint/lib/rules/implicit-arrow-linebreak.js' {
-  declare module.exports: $Exports<'eslint/lib/rules/implicit-arrow-linebreak'>;
 }
 declare module 'eslint/lib/rules/indent-legacy.js' {
   declare module.exports: $Exports<'eslint/lib/rules/indent-legacy'>;
@@ -2358,17 +2350,11 @@ declare module 'eslint/lib/util/glob.js' {
 declare module 'eslint/lib/util/hash.js' {
   declare module.exports: $Exports<'eslint/lib/util/hash'>;
 }
-declare module 'eslint/lib/util/interpolate.js' {
-  declare module.exports: $Exports<'eslint/lib/util/interpolate'>;
-}
 declare module 'eslint/lib/util/keywords.js' {
   declare module.exports: $Exports<'eslint/lib/util/keywords'>;
 }
 declare module 'eslint/lib/util/module-resolver.js' {
   declare module.exports: $Exports<'eslint/lib/util/module-resolver'>;
-}
-declare module 'eslint/lib/util/naming.js' {
-  declare module.exports: $Exports<'eslint/lib/util/naming'>;
 }
 declare module 'eslint/lib/util/node-event-generator.js' {
   declare module.exports: $Exports<'eslint/lib/util/node-event-generator'>;
