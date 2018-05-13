@@ -1,0 +1,5 @@
+flow-typed/*
+coverage/*
+src/registerServiceWorker.js
+src/electron-wait-react.js
+src/electron-starter.js

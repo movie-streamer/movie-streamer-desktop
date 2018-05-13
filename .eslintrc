@@ -1,0 +1,33 @@
+{
+  "parser": "babel-eslint",
+  "extends": ["airbnb", "plugin:flowtype/recommended"],
+  "plugins": [
+    "react",
+    "import",
+    "flowtype",
+  ],
+  "env": {
+    "jest": true,
+    "browser": true,
+  },
+  "rules": {
+    "react/jsx-filename-extension": [2, { "extensions": [".js", ".jsx"] }],
+    "no-use-before-define": [2, { "variables": false, "functions": false }],
+    "no-console": [0],
+    "import/no-extraneous-dependencies": [2, {"devDependencies": true}],
+    "react/sort-comp": [1, {
+      order: [
+        "type-annotations",
+        "static-methods",
+        "lifecycle",
+        "everything-else",
+        "render",
+      ],
+    }],
+    "no-useless-computed-key": [0],
+    "quote-props": [0],
+    "jsx-a11y/media-has-caption": [0],
+    "jsx-a11y/anchor-is-valid": [0],
+  },
+}
+
