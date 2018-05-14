@@ -8,8 +8,6 @@ async function fetchHtml(url: string): Promise<string> {
 
   return new Promise((resolve, reject) => {
     request.on('response', (response) => {
-      console.warn('RESPONSE');
-      console.warn(response.statusCode);
       if (response.statusCode !== 200) {
         reject(Error(`Error ${response.statusCode}`));
       }

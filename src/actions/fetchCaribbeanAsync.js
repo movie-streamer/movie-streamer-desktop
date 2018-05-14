@@ -5,6 +5,8 @@ import DomParser from 'dom-parser';
 import fetchHtml from './fetchHtml';
 import type { SukeibeiLink, ThunkAction } from './types';
 
+export const caribbeanUrl = 'https://sukebei.nyaa.si/?q=caribbean&f=0&c=2_0&s=seeders&o=desc';
+
 function parseSukeibeiPage(htmlPage: string): SukeibeiLink[] {
   const parser = new DomParser();
   const dom = parser.parseFromString(htmlPage);
@@ -17,7 +19,7 @@ function parseSukeibeiPage(htmlPage: string): SukeibeiLink[] {
       .filter(x => x.text === undefined)[1].childNodes
       .filter(x => x.text === undefined)[0].textContent;
 
-    const regex = /(Caribbean)com.+?(\d+)[-_ ](\d+)/;
+    const regex = /(Caribbeancompr|Caribbean).+?(\d+)[-_ ](\d+)/i;
 
     const titleMatch = titleString.match(regex);
     const torrentAttribute = row.childNodes.filter(x => x.text === undefined)[2].childNodes.filter(x => x.text === undefined)[0].attributes.find(x => x.name === 'href');
@@ -36,6 +38,20 @@ function parseSukeibeiPage(htmlPage: string): SukeibeiLink[] {
         && seedsNode
         && leechsNode
         && completedNode) {
+      let coverUrl = `https://www.caribbeancom.com/moviepages/${titleMatch[2]}-${titleMatch[3]}/images/l.jpg`;
+      let trailer360pUrl = `http://smovie.caribbeancom.com/sample/movies/${titleMatch[2]}-${titleMatch[3]}/360p.mp4`;
+      let trailer480pUrl = `http://smovie.caribbeancom.com/sample/movies/${titleMatch[2]}-${titleMatch[3]}/480p.mp4`;
+      let trailer720pUrl = `http://smovie.caribbeancom.com/sample/movies/${titleMatch[2]}-${titleMatch[3]}/720p.mp4`;
+      let trailer1080pUrl = `http://smovie.caribbeancom.com/sample/movies/${titleMatch[2]}-${titleMatch[3]}/1080p.mp4`;
+
+      if (titleMatch[1].toLowerCase() === 'caribbeancompr') {
+        coverUrl = `http://en.caribbeancompr.com/moviepages/${titleMatch[2]}_${titleMatch[3]}/images/l/001.jpg`;
+        trailer360pUrl = `http://en.caribbeancompr.com/sample/movies/${titleMatch[2]}_${titleMatch[3]}/360p.mp4`;
+        trailer480pUrl = `http://en.caribbeancompr.com/sample/movies/${titleMatch[2]}_${titleMatch[3]}/480p.mp4`;
+        trailer720pUrl = `http://en.caribbeancompr.com/sample/movies/${titleMatch[2]}_${titleMatch[3]}/720p.mp4`;
+        trailer1080pUrl = `http://en.caribbeancompr.com/sample/movies/${titleMatch[2]}_${titleMatch[3]}/1080p.mp4`;
+      }
+
       links.push({
         longTitle: titleString,
         shortTitle: `${titleMatch[1]}.com ${titleMatch[2]}-${titleMatch[3]}`,
@@ -48,11 +64,11 @@ function parseSukeibeiPage(htmlPage: string): SukeibeiLink[] {
         seeds: seedsNode.textContent,
         leechs: leechsNode.textContent,
         completedDownloads: completedNode.textContent,
-        coverUrl: `https://www.caribbeancom.com/moviepages/${titleMatch[2]}-${titleMatch[3]}/images/l.jpg`,
-        trailer360pUrl: `http://smovie.caribbeancom.com/sample/movies/${titleMatch[2]}-${titleMatch[3]}/360p.mp4`,
-        trailer480pUrl: `http://smovie.caribbeancom.com/sample/movies/${titleMatch[2]}-${titleMatch[3]}/480p.mp4`,
-        trailer720pUrl: `http://smovie.caribbeancom.com/sample/movies/${titleMatch[2]}-${titleMatch[3]}/720p.mp4`,
-        trailer1080pUrl: `http://smovie.caribbeancom.com/sample/movies/${titleMatch[2]}-${titleMatch[3]}/1080p.mp4`,
+        coverUrl,
+        trailer360pUrl,
+        trailer480pUrl,
+        trailer720pUrl,
+        trailer1080pUrl,
       });
     }
 
@@ -61,11 +77,9 @@ function parseSukeibeiPage(htmlPage: string): SukeibeiLink[] {
 }
 
 function fetchCaribbeanAsync(): ThunkAction {
-  const sukeibeiUrl = 'https://sukebei.nyaa.si/?q=caribbean&f=0&c=2_0&s=seeders&o=desc';
-
   return async (dispatch) => {
     try {
-      const htmlPage = await fetchHtml(sukeibeiUrl);
+      const htmlPage = await fetchHtml(caribbeanUrl);
       const links = parseSukeibeiPage(htmlPage);
       dispatch({ type: 'FETCHED_CARIBBEAN_SUKEIBEI_LINKS', links });
     } catch (error) {

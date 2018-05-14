@@ -16,7 +16,7 @@ function SukeibeiMovieGrid(props: Props) {
   return (
     <Grid container spacing={16}>
       {props.sukeibeiLinks.map(link => (
-        <Grid item lg={3} sm={6}>
+        <Grid item lg={3} sm={6} key={link.magnetLink}>
           <Link
             style={styles.link}
             to={{
@@ -25,7 +25,6 @@ function SukeibeiMovieGrid(props: Props) {
             }}
           >
             <MovieCard
-              key={link.longTitle}
               sukeibeiLink={link}
             />
           </Link>

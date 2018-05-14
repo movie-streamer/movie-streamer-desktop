@@ -36,7 +36,10 @@ function MovieInfoScreen(props: Props) {
           </Link>
         </div>
         <video width="320" height="240" controls>
+          <source src={sukeibeiLink.trailer1080pUrl} />
           <source src={sukeibeiLink.trailer720pUrl} />
+          <source src={sukeibeiLink.trailer480pUrl} />
+          <source src={sukeibeiLink.trailer360pUrl} />
         </video>
       </div>
     );

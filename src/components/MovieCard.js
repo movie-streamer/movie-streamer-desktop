@@ -22,13 +22,7 @@ function MovieCard(props: Props) {
   return (
     <Paper>
       <Card style={styles.card}>
-        <CardMedia style={styles.cardMedia}>
-          <img
-            src={props.sukeibeiLink.coverUrl}
-            alt={`${props.sukeibeiLink.shortTitle} cover`}
-            style={styles.cover}
-          />
-        </CardMedia>
+        <CardMedia style={styles.cardMedia} image={props.sukeibeiLink.coverUrl} />
         <CardContent>
           <Typography gutterBottom variant="headline" component="h2">
             {props.sukeibeiLink.shortTitle}

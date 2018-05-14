@@ -5,6 +5,8 @@ import DomParser from 'dom-parser';
 import fetchHtml from './fetchHtml';
 import type { SukeibeiLink, ThunkAction } from './types';
 
+export const sukeibeiUrl = 'https://sukebei.nyaa.si/?q=&f=0&c=2_0&s=seeders&o=desc';
+
 function parseSukeibeiPage(htmlPage: string): SukeibeiLink[] {
   const parser = new DomParser();
   const dom = parser.parseFromString(htmlPage);
@@ -43,18 +45,18 @@ function parseSukeibeiPage(htmlPage: string): SukeibeiLink[] {
         && seedsNode
         && leechsNode
         && completedNode) {
+      if (titleMatch[2] === 'ABP') {
+        titleMatch[2] = 'TKTABP';
+      } else if (titleMatch[2] === 'SGA') {
+        titleMatch[2] = 'SHASGA';
+      }
+
       const shortTitle = `${titleMatch[2]}-${titleMatch[3]}`;
       let coverUrl = '';
       let trailer360pUrl = '';
       let trailer480pUrl = '';
       let trailer720pUrl = '';
       let trailer1080pUrl = '';
-
-      if (titleMatch[2] === 'ABP') {
-        titleMatch[2] = 'TKTABP';
-      } else if (titleMatch[2] === 'SGA') {
-        titleMatch[2] = 'SHASGA';
-      }
 
       if (titleMatch[2] === 'MDB'
           || titleMatch[2] === 'BAZX'
@@ -190,8 +192,6 @@ function parseSukeibeiPage(htmlPage: string): SukeibeiLink[] {
 }
 
 function fetchSukeibeiAsync(): ThunkAction {
-  const sukeibeiUrl = 'https://sukebei.nyaa.si/?q=&f=0&c=2_0&s=seeders&o=desc';
-
   return async (dispatch) => {
     try {
       const htmlPage = await fetchHtml(sukeibeiUrl);
