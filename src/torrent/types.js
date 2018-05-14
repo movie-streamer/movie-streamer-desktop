@@ -66,6 +66,24 @@ export type File = {
   getBlobURL: (callback: (err: Error, url: string) => void) => void,
 };
 
+/* eslint-disable no-use-before-define */
+export type Peer = {
+  addr: string,
+  conn: any, // TODO: Make Socket type
+  connectTimeout: number,
+  connected: boolean,
+  destroyed: boolean,
+  handshakeTimeout: number,
+  id: string,
+  retries: number,
+  sentHandshake: boolean,
+  swarm: Torrent,
+  timeout: ?number,
+  type: string,
+  wire: any, // TODO: Make Wire type
+};
+/* eslint-enable no-use-before-define */
+
 export type Torrent = {
   infoHash: string,
   magnetURI: string,
@@ -82,6 +100,8 @@ export type Torrent = {
   ratio: number, // Uploaded/Downloaded
   numPeers: number,
   path: string,
+  wires: any[],
+  _peers: { [key: string]: Peer },
   destroy: (callback?: () => void) => void,
   addPeer: (peer: string) => void,
   removePeer: (peer: string) => void,
@@ -121,7 +141,7 @@ export type Client = {
     & ((event: 'error', callback: (err: string) => void) => void),
   remove: (torrentId: string | Buffer, callback?: (err: string) => void) => void,
   destroy: (callback?: (err: string) => void) => void,
-  get: (torrentId: string | Buffer) => Torrent,
+  get: (torrentId: string | Buffer) => ?Torrent,
   torrents: Torrent[],
   downloadSpeed: number, // Bytes/sec
   uploadSpeed: number, // Bytes/sec
