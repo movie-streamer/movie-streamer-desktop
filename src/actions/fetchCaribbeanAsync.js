@@ -19,7 +19,7 @@ function parseSukeibeiPage(htmlPage: string): SukeibeiLink[] {
       .filter(x => x.text === undefined)[1].childNodes
       .filter(x => x.text === undefined)[0].textContent;
 
-    const regex = /(Caribbeancompr|Caribbean).+?(\d+)[-_ ](\d+)/i;
+    const regex = /(Caribbeancompr|カリビアンコム プレミアム|Caribbean|カリビアンコム).+?(\d+)[-_ ](\d+)/i;
 
     const titleMatch = titleString.match(regex);
     const torrentAttribute = row.childNodes.filter(x => x.text === undefined)[2].childNodes.filter(x => x.text === undefined)[0].attributes.find(x => x.name === 'href');
@@ -38,6 +38,12 @@ function parseSukeibeiPage(htmlPage: string): SukeibeiLink[] {
         && seedsNode
         && leechsNode
         && completedNode) {
+      if (titleMatch[1] === 'カリビアンコム') {
+        titleMatch[1] = 'Caribbean';
+      } else if (titleMatch[1] === 'カリビアンコム プレミアム') {
+        titleMatch[1] = 'Caribbeancompr';
+      }
+
       let coverUrl = `https://www.caribbeancom.com/moviepages/${titleMatch[2]}-${titleMatch[3]}/images/l.jpg`;
       let trailer360pUrl = `http://smovie.caribbeancom.com/sample/movies/${titleMatch[2]}-${titleMatch[3]}/360p.mp4`;
       let trailer480pUrl = `http://smovie.caribbeancom.com/sample/movies/${titleMatch[2]}-${titleMatch[3]}/480p.mp4`;
