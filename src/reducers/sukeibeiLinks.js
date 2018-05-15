@@ -5,11 +5,13 @@ import type { SukeibeiLink, Action } from '../actions/types';
 export type SukeibeiLinks = {
   caribbean: SukeibeiLink[],
   sukeibei: SukeibeiLink[],
+  tokyo: SukeibeiLink[],
 };
 
 const initialState = {
   caribbean: [],
   sukeibei: [],
+  tokyo: [],
 };
 
 function sukeibeiLinks(state: SukeibeiLinks = initialState, action: Action): SukeibeiLinks {
@@ -20,10 +22,33 @@ function sukeibeiLinks(state: SukeibeiLinks = initialState, action: Action): Suk
     };
   }
 
+  if (action.type === 'FETCHED_TOKYO_SUKEIBEI_LINKS') {
+    return {
+      ...state,
+      tokyo: action.links,
+    };
+  }
+
   if (action.type === 'FETCHED_SUKEIBEI_LINKS') {
     return {
       ...state,
       sukeibei: action.links,
+    };
+  }
+
+  if (action.type === 'UPDATED_MOVIE_INFO') {
+    const newMovie = action.movie;
+    console.warn(newMovie.shortTitle);
+
+    return {
+      ...state,
+      [action.movieType]: state[action.movieType].map((movie) => {
+        if (movie.magnetLink === newMovie.magnetLink) {
+          return newMovie;
+        }
+
+        return movie;
+      }),
     };
   }
 

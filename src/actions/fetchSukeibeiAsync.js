@@ -178,8 +178,6 @@ function generateMovieLink(
   let trailer480pUrl = '';
   let trailer720pUrl = '';
   let trailer1080pUrl = '';
-  let adHocImage = false;
-  let adHocTrailer = false;
 
   if (['BAZX', 'MDB', 'MDTM', 'SUPA', 'XRW'].includes(idPrefix)) {
     // KM Produce (Bazooka, Super Shiroto, Media Station, Real Works, etc.) titles
@@ -212,8 +210,6 @@ function generateMovieLink(
     trailer1080pUrl = trailer480pUrl;
   } else if (isAliceJapanMovie(idPrefix)) {
     // TODO: Build the frame and send it to the link, so we can fetch the image/trailer at runtime
-    adHocImage = true;
-    adHocTrailer = true;
   } else if (isR18Movie(idPrefix)) {
     const imageId = `${imagePrefix}${imageSuffix}`;
     const trailerId = `${trailerPrefix}${trailerSuffix}`;
@@ -243,8 +239,6 @@ function generateMovieLink(
     trailer480pUrl,
     trailer720pUrl,
     trailer1080pUrl,
-    adHocImage,
-    adHocTrailer,
   };
 }
 

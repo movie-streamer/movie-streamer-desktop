@@ -17,14 +17,16 @@ export type SukeibeiLink = {
   trailer480pUrl: string,
   trailer720pUrl: string,
   trailer1080pUrl: string,
-  adHocImage: boolean, // If the image needs to be fetched at loading time
-  adHocTrailer: boolean, // If the trailer needs to be fetched at loading time
 };
 
 export type Action =
   | { type: 'FETCHED_CARIBBEAN_SUKEIBEI_LINKS', links: SukeibeiLink[] }
   | { type: 'FETCH_CARIBBEAN_SUKEIBEI_LINKS_FAILED', error: Error }
+  | { type: 'FETCHED_TOKYO_SUKEIBEI_LINKS', links: SukeibeiLink[] }
+  | { type: 'FETCH_TOKYO_SUKEIBEI_LINKS_FAILED', error: Error }
   | { type: 'FETCHED_SUKEIBEI_LINKS', links: SukeibeiLink[] }
   | { type: 'FETCH_SUKEIBEI_LINKS_FAILED', error: Error }
+  | { type: 'UPDATED_MOVIE_INFO', movie: SukeibeiLink, movieType: 'tokyo' | 'caribbean' | 'sukeibei' }
+  | { type: 'UPDATE_MOVIE_INFO_FAILED', error: Error }
 
 export type ThunkAction = (dispatch: Action => void) => Promise<void>;

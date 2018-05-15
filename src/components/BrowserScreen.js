@@ -3,8 +3,9 @@
 import React from 'react';
 import { Paper, Tabs, Tab } from 'material-ui';
 
-import CaribbeanBrowserScreen from './browsers/CaribbeanBrowserScreen';
 import SukeibeiBrowserScreen from './browsers/SukeibeiBrowserScreen';
+import CaribbeanBrowserScreen from './browsers/CaribbeanBrowserScreen';
+import TokyoBrowserScreen from './browsers/TokyoBrowserScreen';
 
 type State = {
   tabIndex: number,
@@ -39,12 +40,14 @@ class BrowserScreen extends React.Component<{}, State> {
             centered
           >
             <Tab label="Caribbean" />
+            <Tab label="Tokyo Hot" />
             <Tab label="Sukeibei" />
           </Tabs>
         </Paper>
 
         {this.state.tabIndex === 0 && <CaribbeanBrowserScreen />}
-        {this.state.tabIndex === 1 && <SukeibeiBrowserScreen />}
+        {this.state.tabIndex === 1 && <TokyoBrowserScreen />}
+        {this.state.tabIndex === 2 && <SukeibeiBrowserScreen />}
       </div>
     );
   }
