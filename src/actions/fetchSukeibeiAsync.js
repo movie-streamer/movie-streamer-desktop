@@ -7,6 +7,69 @@ import type { SukeibeiLink, ThunkAction } from './types';
 
 export const sukeibeiUrl = 'https://sukebei.nyaa.si/?q=&f=0&c=2_0&s=seeders&o=desc';
 
+function isSODMovie(idPrefix: string): boolean {
+  return ['SDMU', 'STAR'].includes(idPrefix);
+}
+
+function isR18Movie(idPrefix: string): boolean {
+  return [
+    'AMBI', 'ADN', 'DOHI', 'IPX', 'JUFD', 'KAWD', 'KTKL', 'KTKZ', 'MIAE', 'NDRA', 'NGOD', 'NKKD',
+    'REAL', 'SCOP', 'SCPX', 'SDMU', 'SSNI', 'STAR', 'URMC', 'VRTM',
+  ].includes(idPrefix);
+}
+
+function getTrailerPrefix(idPrefix: string): string {
+  let trailerPrefix = idPrefix;
+
+  if (idPrefix === 'ABP') {
+    trailerPrefix = `TKT${idPrefix}`;
+  } else if (idPrefix === 'SGA') {
+    trailerPrefix = `SHA${idPrefix}`;
+  } else if (isSODMovie(idPrefix)) {
+    trailerPrefix = `1${idPrefix}`;
+  } else if (idPrefix === 'VRTM') {
+    trailerPrefix = `h_910${idPrefix}`;
+  } else if (idPrefix === 'DOHI') {
+    trailerPrefix = `h_139${idPrefix}`;
+  } else if (['REAL', 'SCOP', 'SCPX'].includes(idPrefix)) {
+    trailerPrefix = `84${idPrefix}`;
+  }
+
+  return trailerPrefix.toLowerCase();
+}
+
+function getImagePrefix(idPrefix: string): string {
+  let imagePrefix = getTrailerPrefix(idPrefix);
+
+  if (idPrefix === 'REAL') {
+    imagePrefix = `172${idPrefix}`;
+  } else if (['SCOP', 'SCPX'].includes(idPrefix)) {
+    imagePrefix = `h_565${idPrefix}`;
+  }
+
+  return imagePrefix.toLowerCase();
+}
+
+function getImageSuffix(idPrefix: string, idSuffix: string): string {
+  let imageSuffix = idSuffix;
+
+  if (isR18Movie(idPrefix)) {
+    imageSuffix = `00${idSuffix}`;
+  }
+
+  return imageSuffix;
+}
+
+function getTrailerSuffix(idPrefix: string, idSuffix: string): string {
+  let trailerSuffix = getImageSuffix(idPrefix, idSuffix);
+
+  if (['AMBI', 'VRTM', 'DOHI', 'REAL', 'SCPX', 'SCOP'].includes(idPrefix)) {
+    trailerSuffix = idSuffix;
+  }
+
+  return trailerSuffix;
+}
+
 function parseSukeibeiPage(htmlPage: string): SukeibeiLink[] {
   const parser = new DomParser();
   const dom = parser.parseFromString(htmlPage);
@@ -45,150 +108,110 @@ function parseSukeibeiPage(htmlPage: string): SukeibeiLink[] {
         && seedsNode
         && leechsNode
         && completedNode) {
-      if (titleMatch[2] === 'ABP') {
-        titleMatch[2] = 'TKTABP';
-      } else if (titleMatch[2] === 'SGA') {
-        titleMatch[2] = 'SHASGA';
-      }
-
-      const shortTitle = `${titleMatch[2]}-${titleMatch[3]}`;
-      let coverUrl = '';
-      let trailer360pUrl = '';
-      let trailer480pUrl = '';
-      let trailer720pUrl = '';
-      let trailer1080pUrl = '';
-
-      if (titleMatch[2] === 'MDB'
-          || titleMatch[2] === 'BAZX'
-          || titleMatch[2] === 'SUPA'
-          || titleMatch[2] === 'MDTM'
-          || titleMatch[2] === 'XRW') {
-        // KM Produce (Bazooka, Super Shiroto, Media Station, Real Works, etc.) titles
-        coverUrl = `http://www.km-produce.com/img/title1/${shortTitle.toLowerCase()}.jpg`;
-        trailer480pUrl = `https://dl0.supermm.jp/unsecure/600/sample/${shortTitle}.mp4`;
-
-        // TODO: Put them as null instead
-        trailer360pUrl = trailer480pUrl;
-        trailer720pUrl = trailer480pUrl;
-        trailer1080pUrl = trailer480pUrl;
-      } else if (titleMatch[2] === 'SCOP' || titleMatch[2] === 'SCPX') {
-        const imageTitle = `${titleMatch[2].toLowerCase()}00${titleMatch[3]}`;
-        const trailerTitle = `${titleMatch[2].toLowerCase()}${titleMatch[3]}`;
-        // Scoop titles
-        coverUrl = `http://pics.r18.com/digital/video/h_565${imageTitle}/h_565${imageTitle}pl.jpg`;
-        trailer360pUrl = `http://awspv3001.r18.com/litevideo/freepv/8/84s/84${trailerTitle}/84${trailerTitle}_sm_w.mp4`;
-        trailer480pUrl = `http://awspv3001.r18.com/litevideo/freepv/8/84s/84${trailerTitle}/84${trailerTitle}_dm_w.mp4`;
-        trailer720pUrl = `http://awspv3001.r18.com/litevideo/freepv/8/84s/84${trailerTitle}/84${trailerTitle}_dmb_w.mp4`;
-        trailer1080pUrl = trailer720pUrl;
-      } else if (titleMatch[2] === 'FIV'
-          || titleMatch[2] === 'TKTABP'
-          || titleMatch[2] === 'YRH'
-          || titleMatch[2] === 'SHASGA'
-          || titleMatch[2] === 'MGT'
-          || titleMatch[2] === 'TEM'
-          || titleMatch[2] === 'KKJ'
-          || titleMatch[2] === 'GETS'
-          || titleMatch[2] === 'CPDE') {
-        // Prestige titles
-        let prefix = 'prestige';
-
-        if (titleMatch[2] === 'TEM' || titleMatch[2] === 'KKJ') {
-          // Magic prefix
-          prefix = 'magic';
-        } else if (titleMatch[2] === 'GETS') {
-          // Gets prefix
-          prefix = 'gets';
-        } else if (titleMatch[2] === 'CPDE') {
-          // Saikyou Zokusei prefix
-          prefix = 'saikyouzokusei';
-        }
-
-        coverUrl = `http://www.prestige-av.com/images/corner/goods/${prefix}/${titleMatch[2].toLowerCase()}/${titleMatch[3]}/pb_e_${shortTitle.toLowerCase()}.jpg`;
-        trailer480pUrl = `http://www.prestige-av.com/sample_movie/${shortTitle}.mp4`;
-        trailer360pUrl = trailer480pUrl;
-        trailer720pUrl = trailer480pUrl;
-        trailer1080pUrl = trailer480pUrl;
-      } else if (titleMatch[2] === 'MIAE') {
-        // Moodyz
-        const imageTitle = `${titleMatch[2].toLowerCase()}${titleMatch[3]}`;
-        const trailerTitle = `${titleMatch[2].toLowerCase()}00${titleMatch[3]}`;
-        coverUrl = `https://www.moodyz.com/contents/works/${imageTitle}/${imageTitle}pl.jpg`;
-        trailer360pUrl = `http://cc3001.dmm.co.jp/litevideo/freepv/m/mia/${trailerTitle}/${trailerTitle}_sm_w.mp4`;
-        trailer480pUrl = `http://cc3001.dmm.co.jp/litevideo/freepv/m/mia/${trailerTitle}/${trailerTitle}_dm_w.mp4`;
-        trailer720pUrl = `http://cc3001.dmm.co.jp/litevideo/freepv/m/mia/${trailerTitle}/${trailerTitle}_dmb_w.mp4`;
-        trailer1080pUrl = trailer720pUrl;
-      } else if (titleMatch[2] === 'DOHI') {
-        // Office K's
-        const imageTitle = `${titleMatch[2].toLowerCase()}00${titleMatch[3]}`;
-        const trailerTitle = `${titleMatch[2].toLowerCase()}${titleMatch[3]}`;
-        coverUrl = `http://pics.r18.com/digital/video/36${imageTitle}/36${imageTitle}pl.jpg`;
-        trailer360pUrl = `http://awspv3001.r18.com/litevideo/freepv/h/h_1/h_139${trailerTitle}/h_139${trailerTitle}_sm_w.mp4`;
-        trailer480pUrl = `http://awspv3001.r18.com/litevideo/freepv/h/h_1/h_139${trailerTitle}/h_139${trailerTitle}_dm_w.mp4`;
-        trailer720pUrl = `http://awspv3001.r18.com/litevideo/freepv/h/h_1/h_139${trailerTitle}/h_139${trailerTitle}_dmb_w.mp4`;
-        trailer1080pUrl = trailer720pUrl;
-      } else if (titleMatch[2] === 'NKKD' // JET Eizo
-          || titleMatch[2] === 'NDRA' // JET Eizo
-          || titleMatch[2] === 'NGOD' // JET Eizo
-          || titleMatch[2] === 'SSNI' // S1 style
-          || titleMatch[2] === 'ADN' // Attackers
-          || titleMatch[2] === 'JUFD' // Fitch
-          || titleMatch[2] === 'KTKZ' // Kitixx/Mousouzoku
-          || titleMatch[2] === 'KTKL' // Kitixx/Mousouzoku
-          || titleMatch[2] === 'IPX' // Idea Pocket
-          || titleMatch[2] === 'KAWD' // Kawaii
-          || titleMatch[2] === 'URMC') { // Unfinished
-        // JET Eizo, S1 Style, Attackers, Fitch, Unfinished
-        const imageTitle = `${titleMatch[2].toLowerCase()}00${titleMatch[3]}`;
-        const firstLetter = titleMatch[2].substr(0, 1).toLowerCase();
-        const subTitle = titleMatch[2].substr(0, 3).toLowerCase();
-        coverUrl = `http://pics.r18.com/digital/video/${imageTitle}/${imageTitle}pl.jpg`;
-        trailer360pUrl = `http://awspv3001.r18.com/litevideo/freepv/${firstLetter}/${subTitle}/${imageTitle}/${imageTitle}_sm_w.mp4`;
-        trailer480pUrl = `http://awspv3001.r18.com/litevideo/freepv/${firstLetter}/${subTitle}/${imageTitle}/${imageTitle}_dm_w.mp4`;
-        trailer720pUrl = `http://awspv3001.r18.com/litevideo/freepv/${firstLetter}/${subTitle}/${imageTitle}/${imageTitle}_dmb_w.mp4`;
-        trailer1080pUrl = trailer720pUrl;
-      } else if (titleMatch[2] === 'HUNTA') {
-        // Hunter
-        const imageTitle = `${titleMatch[2].toLowerCase()}00${titleMatch[3]}`;
-        const trailerTitle = `${titleMatch[2].toLowerCase()}${titleMatch[3]}`;
-        const firstLetter = titleMatch[2].substr(0, 1).toLowerCase();
-        const subTitle = titleMatch[2].substr(0, 3).toLowerCase();
-        coverUrl = `http://pics.r18.com/digital/video/${imageTitle}/${imageTitle}pl.jpg`;
-        trailer360pUrl = `http://awspv3001.r18.com/litevideo/freepv/${firstLetter}/${subTitle}/${trailerTitle}/${trailerTitle}_sm_w.mp4`;
-        trailer480pUrl = `http://awspv3001.r18.com/litevideo/freepv/${firstLetter}/${subTitle}/${trailerTitle}/${trailerTitle}_dm_w.mp4`;
-        trailer720pUrl = `http://awspv3001.r18.com/litevideo/freepv/${firstLetter}/${subTitle}/${trailerTitle}/${trailerTitle}_dmb_w.mp4`;
-        trailer1080pUrl = trailer720pUrl;
-      } else if (titleMatch[2] === 'AMBI') {
-        const imageTitle = `${titleMatch[2].toLowerCase()}00${titleMatch[3]}`;
-        const trailerTitle = `${titleMatch[2].toLowerCase()}${titleMatch[3]}`;
-        coverUrl = `http://pics.r18.com/digital/video/h_237${imageTitle}/h_237${imageTitle}pl.jpg`;
-        trailer360pUrl = `http://awspv3001.r18.com/litevideo/freepv/h/h_2/h_237${trailerTitle}/h_237${trailerTitle}_sm_w.mp4`;
-        trailer480pUrl = `http://awspv3001.r18.com/litevideo/freepv/h/h_2/h_237${trailerTitle}/h_237${trailerTitle}_dm_w.mp4`;
-        trailer720pUrl = `http://awspv3001.r18.com/litevideo/freepv/h/h_2/h_237${trailerTitle}/h_237${trailerTitle}_dmb_w.mp4`;
-        trailer1080pUrl = trailer720pUrl;
-      }
-
-      links.push({
-        longTitle: titleString,
-        shortTitle,
-        idPrefix: titleMatch[2],
-        idSuffix: titleMatch[3],
-        magnetLink: magnetAttribute.value,
-        torrentLink: `https://sukebei.nyaa.si${torrentAttribute.value}`,
-        size: sizeNode.textContent,
-        uploadDate: dateNode.textContent,
-        seeds: seedsNode.textContent,
-        leechs: leechsNode.textContent,
-        completedDownloads: completedNode.textContent,
-        coverUrl,
-        trailer360pUrl,
-        trailer480pUrl,
-        trailer720pUrl,
-        trailer1080pUrl,
-      });
+      links.push(generateMovieLink(
+        titleString,
+        titleMatch[2],
+        titleMatch[3],
+        getImagePrefix(titleMatch[2]),
+        getImageSuffix(titleMatch[2], titleMatch[3]),
+        getTrailerPrefix(titleMatch[2]),
+        getTrailerSuffix(titleMatch[2], titleMatch[3]),
+        magnetAttribute.value,
+        `https://sukebei.nyaa.si${torrentAttribute.value}`,
+        seedsNode.textContent,
+        leechsNode.textContent,
+        sizeNode.textContent,
+        dateNode.textContent,
+        completedNode.textContent,
+      ));
     }
 
     return links;
   }, []);
+}
+
+function generateMovieLink(
+  longTitle: string,
+  idPrefix: string,
+  idSuffix: string,
+  imagePrefix: string,
+  imageSuffix: string,
+  trailerPrefix: string,
+  trailerSuffix: string,
+  magnetLink: string,
+  torrentLink: string,
+  seeds: number,
+  leechs: number,
+  size: string,
+  uploadDate: string,
+  completedDownloads: number,
+): SukeibeiLink {
+  const shortTitle = `${idPrefix}-${idSuffix}`;
+  let coverUrl = '';
+  let trailer360pUrl = '';
+  let trailer480pUrl = '';
+  let trailer720pUrl = '';
+  let trailer1080pUrl = '';
+
+  if (['BAZX', 'MDB', 'MDTM', 'SUPA', 'XRW'].includes(idPrefix)) {
+    // KM Produce (Bazooka, Super Shiroto, Media Station, Real Works, etc.) titles
+    coverUrl = `http://www.km-produce.com/img/title1/${imagePrefix}-${imageSuffix}.jpg`;
+    trailer480pUrl = `https://dl0.supermm.jp/unsecure/600/sample/${imagePrefix.toUpperCase()}-${imageSuffix}.mp4`;
+
+    // TODO: Put them as null instead
+    trailer360pUrl = trailer480pUrl;
+    trailer720pUrl = trailer480pUrl;
+    trailer1080pUrl = trailer480pUrl;
+  } else if (['ABP', 'CPDE', 'FIV', 'GETS', 'KKJ', 'MGT', 'SGA', 'TEM', 'YRH'].includes(idPrefix)) {
+    // Prestige titles
+    let studioPrefix = 'prestige';
+
+    if (idPrefix === 'TEM' || idPrefix === 'KKJ') {
+      // Magic prefix
+      studioPrefix = 'magic';
+    } else if (idPrefix === 'GETS') {
+      // Gets prefix
+      studioPrefix = 'gets';
+    } else if (idPrefix === 'CPDE') {
+      // Saikyou Zokusei prefix
+      studioPrefix = 'saikyouzokusei';
+    }
+
+    coverUrl = `http://www.prestige-av.com/images/corner/goods/${studioPrefix}/${imagePrefix}/${imageSuffix}/pb_e_${imagePrefix}-${imageSuffix}.jpg`;
+    trailer480pUrl = `http://www.prestige-av.com/sample_movie/${imagePrefix.toUpperCase()}-${imageSuffix}.mp4`;
+    trailer360pUrl = trailer480pUrl;
+    trailer720pUrl = trailer480pUrl;
+    trailer1080pUrl = trailer480pUrl;
+  } else if (isR18Movie(idPrefix)) {
+    const imageId = `${imagePrefix}${imageSuffix}`;
+    const trailerId = `${trailerPrefix}${trailerSuffix}`;
+    const firstLetter = trailerPrefix.substr(0, 1).toLowerCase();
+    const subTitle = trailerPrefix.substr(0, 3).toLowerCase();
+    coverUrl = `http://pics.r18.com/digital/video/${imageId}/${imageId}pl.jpg`;
+    trailer360pUrl = `http://awspv3001.r18.com/litevideo/freepv/${firstLetter}/${subTitle}/${trailerId}/${trailerId}_sm_w.mp4`;
+    trailer480pUrl = `http://awspv3001.r18.com/litevideo/freepv/${firstLetter}/${subTitle}/${trailerId}/${trailerId}_dm_w.mp4`;
+    trailer720pUrl = `http://awspv3001.r18.com/litevideo/freepv/${firstLetter}/${subTitle}/${trailerId}/${trailerId}_dmb_w.mp4`;
+    trailer1080pUrl = trailer720pUrl;
+  }
+
+  return {
+    longTitle,
+    shortTitle,
+    idPrefix,
+    idSuffix,
+    magnetLink,
+    torrentLink,
+    size,
+    uploadDate,
+    seeds,
+    leechs,
+    completedDownloads,
+    coverUrl,
+    trailer360pUrl,
+    trailer480pUrl,
+    trailer720pUrl,
+    trailer1080pUrl,
+  };
 }
 
 function fetchSukeibeiAsync(): ThunkAction {
