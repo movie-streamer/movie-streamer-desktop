@@ -17,6 +17,8 @@ export type SukeibeiLink = {
   trailer480pUrl: string,
   trailer720pUrl: string,
   trailer1080pUrl: string,
+  adHocImage: boolean, // If the image needs to be fetched at loading time
+  adHocTrailer: boolean, // If the trailer needs to be fetched at loading time
 };
 
 export type Action =

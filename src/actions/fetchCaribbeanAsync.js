@@ -58,6 +58,9 @@ function parseSukeibeiPage(htmlPage: string): SukeibeiLink[] {
         trailer1080pUrl = `http://en.caribbeancompr.com/sample/movies/${titleMatch[2]}_${titleMatch[3]}/1080p.mp4`;
       }
 
+      const adHocImage = false;
+      const adHocTrailer = false;
+
       links.push({
         longTitle: titleString,
         shortTitle: `${titleMatch[1]}.com ${titleMatch[2]}-${titleMatch[3]}`,
@@ -75,6 +78,8 @@ function parseSukeibeiPage(htmlPage: string): SukeibeiLink[] {
         trailer480pUrl,
         trailer720pUrl,
         trailer1080pUrl,
+        adHocImage,
+        adHocTrailer,
       });
     }
 

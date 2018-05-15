@@ -13,9 +13,16 @@ function isSODMovie(idPrefix: string): boolean {
 
 function isR18Movie(idPrefix: string): boolean {
   return [
-    'AMBI', 'ADN', 'DOHI', 'IPX', 'JUFD', 'KAWD', 'KTKL', 'KTKZ', 'MIAE', 'NDRA', 'NGOD', 'NKKD',
-    'REAL', 'SCOP', 'SCPX', 'SDMU', 'SSNI', 'STAR', 'URMC', 'VRTM',
+    'AMBI', 'ADN', 'APKH', 'APNS', 'AVSA', 'BRK', 'DCX', 'DOCP', 'DOHI', 'EBOD', 'EYAN', 'FSET',
+    'GVG', 'INCT', 'IPX', 'JUFD', 'JUY', 'KAWD', 'KTKL', 'KTKZ', 'MIAE', 'MIDE', 'MIFD', 'MMGH',
+    'MUDR', 'MUKD', 'MRXD', 'MXGS', 'NDRA', 'NGOD', 'NHDTB', 'NKKD', 'REAL', 'RCTD', 'SCOP', 'SCPX',
+    'SDDE', 'SDMU', 'SHKN', 'SNTL', 'SOAN', 'SSNI', 'STAR', 'SVDVD', 'SW', 'TRE', 'URMC', 'VRTM',
+    'YPAA',
   ].includes(idPrefix);
+}
+
+function isAliceJapanMovie(idPrefix: string): boolean {
+  return ['DVAJ'].includes(idPrefix);
 }
 
 function getTrailerPrefix(idPrefix: string): string {
@@ -25,7 +32,10 @@ function getTrailerPrefix(idPrefix: string): string {
     trailerPrefix = `TKT${idPrefix}`;
   } else if (idPrefix === 'SGA') {
     trailerPrefix = `SHA${idPrefix}`;
-  } else if (isSODMovie(idPrefix)) {
+  } else if (isSODMovie(idPrefix) ||
+    [
+      'FSET', 'MMGH', 'NHDTB', 'RCTD', 'SDDE', 'SVDVD', 'SW',
+    ].includes(idPrefix)) {
     trailerPrefix = `1${idPrefix}`;
   } else if (idPrefix === 'VRTM') {
     trailerPrefix = `h_910${idPrefix}`;
@@ -33,6 +43,18 @@ function getTrailerPrefix(idPrefix: string): string {
     trailerPrefix = `h_139${idPrefix}`;
   } else if (['REAL', 'SCOP', 'SCPX'].includes(idPrefix)) {
     trailerPrefix = `84${idPrefix}`;
+  } else if (idPrefix === 'SHKN') {
+    trailerPrefix = `h_1281${idPrefix}`;
+  } else if (idPrefix === 'YPAA') {
+    trailerPrefix = `h_086${idPrefix}`;
+  } else if (idPrefix === 'BRK') {
+    trailerPrefix = `143${idPrefix}`;
+  } else if (idPrefix === 'MXGS') {
+    trailerPrefix = `h_068${idPrefix}`;
+  } else if (['TRE', 'DCX', 'DOCP'].includes(idPrefix)) {
+    trailerPrefix = `118${idPrefix}`;
+  } else if (idPrefix === 'GVG') {
+    trailerPrefix = `13${idPrefix}`;
   }
 
   return trailerPrefix.toLowerCase();
@@ -54,7 +76,7 @@ function getImageSuffix(idPrefix: string, idSuffix: string): string {
   let imageSuffix = idSuffix;
 
   if (isR18Movie(idPrefix)) {
-    imageSuffix = `00${idSuffix}`;
+    imageSuffix = idSuffix.padStart(5, '0');
   }
 
   return imageSuffix;
@@ -63,7 +85,11 @@ function getImageSuffix(idPrefix: string, idSuffix: string): string {
 function getTrailerSuffix(idPrefix: string, idSuffix: string): string {
   let trailerSuffix = getImageSuffix(idPrefix, idSuffix);
 
-  if (['AMBI', 'VRTM', 'DOHI', 'REAL', 'SCPX', 'SCOP'].includes(idPrefix)) {
+  if (
+    [
+      'AMBI', 'APKH', 'APNS', 'AVSA', 'BRK', 'DCX', 'DOCP', 'DOHI', 'MXGS', 'REAL', 'SCPX', 'SCOP',
+      'SHKN', 'TRE', 'VRTM', 'YPAA',
+    ].includes(idPrefix)) {
     trailerSuffix = idSuffix;
   }
 
@@ -152,6 +178,8 @@ function generateMovieLink(
   let trailer480pUrl = '';
   let trailer720pUrl = '';
   let trailer1080pUrl = '';
+  let adHocImage = false;
+  let adHocTrailer = false;
 
   if (['BAZX', 'MDB', 'MDTM', 'SUPA', 'XRW'].includes(idPrefix)) {
     // KM Produce (Bazooka, Super Shiroto, Media Station, Real Works, etc.) titles
@@ -176,21 +204,25 @@ function generateMovieLink(
       // Saikyou Zokusei prefix
       studioPrefix = 'saikyouzokusei';
     }
-
+    // a5999f552580fedcb7e9f5682bcf08a5
     coverUrl = `http://www.prestige-av.com/images/corner/goods/${studioPrefix}/${imagePrefix}/${imageSuffix}/pb_e_${imagePrefix}-${imageSuffix}.jpg`;
     trailer480pUrl = `http://www.prestige-av.com/sample_movie/${imagePrefix.toUpperCase()}-${imageSuffix}.mp4`;
     trailer360pUrl = trailer480pUrl;
     trailer720pUrl = trailer480pUrl;
     trailer1080pUrl = trailer480pUrl;
+  } else if (isAliceJapanMovie(idPrefix)) {
+    // TODO: Build the frame and send it to the link, so we can fetch the image/trailer at runtime
+    adHocImage = true;
+    adHocTrailer = true;
   } else if (isR18Movie(idPrefix)) {
     const imageId = `${imagePrefix}${imageSuffix}`;
     const trailerId = `${trailerPrefix}${trailerSuffix}`;
     const firstLetter = trailerPrefix.substr(0, 1).toLowerCase();
     const subTitle = trailerPrefix.substr(0, 3).toLowerCase();
-    coverUrl = `http://pics.r18.com/digital/video/${imageId}/${imageId}pl.jpg`;
-    trailer360pUrl = `http://awspv3001.r18.com/litevideo/freepv/${firstLetter}/${subTitle}/${trailerId}/${trailerId}_sm_w.mp4`;
-    trailer480pUrl = `http://awspv3001.r18.com/litevideo/freepv/${firstLetter}/${subTitle}/${trailerId}/${trailerId}_dm_w.mp4`;
-    trailer720pUrl = `http://awspv3001.r18.com/litevideo/freepv/${firstLetter}/${subTitle}/${trailerId}/${trailerId}_dmb_w.mp4`;
+    coverUrl = `http://pics.dmm.co.jp/digital/video/${imageId}/${imageId}pl.jpg`;
+    trailer360pUrl = `http://cc3001.dmm.co.jp/litevideo/freepv/${firstLetter}/${subTitle}/${trailerId}/${trailerId}_sm_w.mp4`;
+    trailer480pUrl = `http://cc3001.dmm.co.jp/litevideo/freepv/${firstLetter}/${subTitle}/${trailerId}/${trailerId}_dm_w.mp4`;
+    trailer720pUrl = `http://cc3001.dmm.co.jp/litevideo/freepv/${firstLetter}/${subTitle}/${trailerId}/${trailerId}_dmb_w.mp4`;
     trailer1080pUrl = trailer720pUrl;
   }
 
@@ -211,6 +243,8 @@ function generateMovieLink(
     trailer480pUrl,
     trailer720pUrl,
     trailer1080pUrl,
+    adHocImage,
+    adHocTrailer,
   };
 }
 
