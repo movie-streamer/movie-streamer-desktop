@@ -6,12 +6,14 @@ export type SukeibeiLinks = {
   caribbean: SukeibeiLink[],
   sukeibei: SukeibeiLink[],
   tokyo: SukeibeiLink[],
+  kv: SukeibeiLink[],
 };
 
 const initialState = {
   caribbean: [],
   sukeibei: [],
   tokyo: [],
+  kv: [],
 };
 
 function sukeibeiLinks(state: SukeibeiLinks = initialState, action: Action): SukeibeiLinks {
@@ -26,6 +28,13 @@ function sukeibeiLinks(state: SukeibeiLinks = initialState, action: Action): Suk
     return {
       ...state,
       tokyo: action.links,
+    };
+  }
+
+  if (action.type === 'FETCHED_KV_SUKEIBEI_LINKS') {
+    return {
+      ...state,
+      kv: action.links,
     };
   }
 

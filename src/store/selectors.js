@@ -15,6 +15,10 @@ export function getTokyoLinks(state: State) {
   return state.sukeibeiLinks.tokyo;
 }
 
+export function getKnightsVisualLinks(state: State) {
+  return state.sukeibeiLinks.kv;
+}
+
 export function getSukeibeiLinks(state: State) {
   return state.sukeibeiLinks.sukeibei;
 }
@@ -22,7 +26,7 @@ export function getSukeibeiLinks(state: State) {
 export function getUpdatedMovieInfo(
   state: State,
   newMovie: SukeibeiLink,
-  movieType: 'tokyo' | 'caribbean' | 'sukeibei',
+  movieType: 'tokyo' | 'caribbean' | 'sukeibei' | 'kv',
 ) {
   return state.sukeibeiLinks[movieType].find(movie => movie.magnetLink === newMovie.magnetLink);
 }

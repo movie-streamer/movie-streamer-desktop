@@ -24,9 +24,11 @@ export type Action =
   | { type: 'FETCH_CARIBBEAN_SUKEIBEI_LINKS_FAILED', error: Error }
   | { type: 'FETCHED_TOKYO_SUKEIBEI_LINKS', links: SukeibeiLink[] }
   | { type: 'FETCH_TOKYO_SUKEIBEI_LINKS_FAILED', error: Error }
+  | { type: 'FETCHED_KV_SUKEIBEI_LINKS', links: SukeibeiLink[] }
+  | { type: 'FETCH_KV_SUKEIBEI_LINKS_FAILED', error: Error }
   | { type: 'FETCHED_SUKEIBEI_LINKS', links: SukeibeiLink[] }
   | { type: 'FETCH_SUKEIBEI_LINKS_FAILED', error: Error }
-  | { type: 'UPDATED_MOVIE_INFO', movie: SukeibeiLink, movieType: 'tokyo' | 'caribbean' | 'sukeibei' }
+  | { type: 'UPDATED_MOVIE_INFO', movie: SukeibeiLink, movieType: 'tokyo' | 'kv' | 'caribbean' | 'sukeibei' }
   | { type: 'UPDATE_MOVIE_INFO_FAILED', error: Error }
 
 export type ThunkAction = (dispatch: Action => void) => Promise<void>;
