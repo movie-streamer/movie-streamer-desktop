@@ -47,7 +47,6 @@ function sukeibeiLinks(state: SukeibeiLinks = initialState, action: Action): Suk
 
   if (action.type === 'UPDATED_MOVIE_INFO') {
     const newMovie = action.movie;
-    console.warn(newMovie.shortTitle);
 
     return {
       ...state,
